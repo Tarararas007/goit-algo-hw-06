@@ -37,9 +37,8 @@ class Record:
         phone_obj = self.find_phone(old_phone)
         if not phone_obj:
             raise ValueError (f"Phone {old_phone} not found.")
-        if not Phone.validate(new_phone):
-            raise ValueError (f"New phone {new_phone} is invalid.")
-        phone_obj.value = new_phone
+        self.remove_phone(old_phone)
+        self.add_phone(new_phone)
 
     def find_phone(self, phone):
         for p in self.phones:
@@ -55,10 +54,10 @@ class AddressBook(UserDict):
         self.data[record.name.value] = record
 
     def find(self, name):
-        return self.data[name]
+        return self.data.get(name, None)
     
     def delete(self, name):
-        if name is self.data:
+        if name in self.data:
             del self.data[name]
         
     def __str__(self):
