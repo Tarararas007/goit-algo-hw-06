@@ -8,17 +8,17 @@ class Field:
         return str(self.value)
 
 class Name(Field):
-		pass
+    pass
 
 class Phone(Field):
     def __init__(self, value):
-         if not self.validate(value):
-              raise ValueError('Phone number must contain exactly 10 digits.')
-         super().__init__(value)
+        if not self.validate(value):
+            raise ValueError('Phone number must contain exactly 10 digits.')
+        super().__init__(value)
 
     @staticmethod
     def validate(value):
-         return value.isdigit() and len(value) == 10
+        return value.isdigit() and len(value) == 10
 
 class Record:
     def __init__(self, name):
@@ -34,11 +34,15 @@ class Record:
             self.phones.remove(phone_obj)
     
     def edit_phone(self, new_phone, old_phone):
+        if not Phone.validate(new_phone):
+            raise ValueError(f"New phone {new_phone} is invalid. Must contain exactly 10 digits.")
         phone_obj = self.find_phone(old_phone)
         if not phone_obj:
-            raise ValueError (f"Phone {old_phone} not found.")
-        self.remove_phone(old_phone)
-        self.add_phone(new_phone)
+            raise ValueError(f"Phone {old_phone} not found")
+        if self.find_phone(new_phone):
+            raise ValueError(f"Phone {new_phone} already exist")
+        idx = self.phones.index(phone_obj)
+        self.phones[idx] = Phone(new_phone)
 
     def find_phone(self, phone):
         for p in self.phones:
