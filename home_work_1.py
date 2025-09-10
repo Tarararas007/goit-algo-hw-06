@@ -33,16 +33,12 @@ class Record:
         if phone_obj:
             self.phones.remove(phone_obj)
     
-    def edit_phone(self, new_phone, old_phone):
-        if not Phone.validate(new_phone):
-            raise ValueError(f"New phone {new_phone} is invalid. Must contain exactly 10 digits.")
-        phone_obj = self.find_phone(old_phone)
-        if not phone_obj:
-            raise ValueError(f"Phone {old_phone} not found")
-        if self.find_phone(new_phone):
-            raise ValueError(f"Phone {new_phone} already exist")
-        idx = self.phones.index(phone_obj)
-        self.phones[idx] = Phone(new_phone)
+    def edit_phone(self, old_phone, new_phone):
+        if not self.find_phone(old_phone):
+            raise ValueError(f"Phone {old_phone} not found.")
+        self.add_phone(new_phone)
+
+        self.remove_phone(old_phone)
 
     def find_phone(self, phone):
         for p in self.phones:
